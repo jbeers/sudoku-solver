@@ -1,0 +1,86 @@
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.preact:hover {
+  filter: drop-shadow(0 0 2em #673ab8aa);
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.app {
+  display: flex;
+  align-items: center;
+}
+
+.app > * {
+  margin-right: 20px;
+}
+
+.puzzle {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  align-items: center;
+}
+
+.puzzle > * {
+  margin-bottom: 20px;
+}
+
+.puzzle__game {
+  width: fit-content;
+  marign: auto;
+}
+
+.puzzle__row {
+  display: flex;
+  border-bottom: none;
+}
+
+.puzzle__row:nth-of-type(3), .puzzle__row:nth-of-type(6) {
+  border-bottom: 1px solid green;
+}
+
+.puzzle__cell {
+  box-sizing: border-box;
+  width: 40px;
+  height: 40px;
+  text-align:center;
+  outline: none;
+  border: none;
+}
+
+.puzzle__cell:focus {
+  border: 1px solid white;
+}
+
+.puzzle__cell:nth-of-type(3), .puzzle__cell:nth-of-type(6)  {
+  border-right: 1px solid green;
+}
+
+input.puzzle__cell::-webkit-outer-spin-button,
+input.puzzle__cell::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number].puzzle__cell {
+  -moz-appearance: textfield;
+}

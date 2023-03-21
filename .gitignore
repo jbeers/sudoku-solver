@@ -1,0 +1,4 @@
+sudoku-ui/node_modules/
+aws
+awscliv2.zip
+sudoku-lamda-function/target

@@ -23,8 +23,11 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
+      - name: Setup wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+        
       # Runs a single command using the runners shell
-      - name: Configure rust
+      - name: Build wasm
         run: |
           cd sudoku-solver
           wasm-pack --target web

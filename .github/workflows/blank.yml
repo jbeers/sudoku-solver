@@ -49,4 +49,5 @@ jobs:
           script: cat /var/www/html/sudoku-solver/index.html
           source: "sudoku-ui/dist/*"
           target: "/var/www/html/sudoku-solver/"
+          strip_components: 2
       

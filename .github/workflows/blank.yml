@@ -47,6 +47,6 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: cat /var/www/html/sudoku-solver/index.html
-          source: "sudoku-ui/dist"
+          source: "sudoku-ui/dist/*"
           target: "/var/www/html/sudoku-solver"
       

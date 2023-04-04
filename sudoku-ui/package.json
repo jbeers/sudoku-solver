@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build -base=/sudoku-solver",
+    "build": "vite build --base=/sudoku-solver",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -48,6 +48,6 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          script: cat /var/html/sudoku-solver/index.html
+          script: cat /var/www/html/sudoku-solver/index.html
           
       

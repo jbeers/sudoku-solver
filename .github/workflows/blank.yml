@@ -48,5 +48,5 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: cat /var/www/html/sudoku-solver/index.html
           source: "sudoku-ui/dist/*"
-          target: "/var/www/html/sudoku-solver"
+          target: "/var/www/html/sudoku-solver/"
       

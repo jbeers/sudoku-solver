@@ -1,37 +1,31 @@
 #app {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.preact:hover {
-  filter: drop-shadow(0 0 2em #673ab8aa);
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .app {
-  display: flex;
+  justify-content: center;
   align-items: center;
+  display: flex;
+  flex-direction: column;
 }
 
-.app > * {
-  margin-right: 20px;
+.app-buttons {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
 }
+
+.app-buttons__button {
+  min-width: 100px;
+  padding: 20px;
+}
+
 
 .puzzle {
   display: flex;
@@ -65,10 +59,11 @@
   text-align:center;
   outline: none;
   border: none;
+  border: 1px solid #ddd;
 }
 
 .puzzle__cell:focus {
-  border: 1px solid white;
+  border: 1px solid black;
 }
 
 .puzzle__cell:nth-of-type(3), .puzzle__cell:nth-of-type(6)  {
@@ -83,4 +78,41 @@ input.puzzle__cell::-webkit-inner-spin-button {
 
 input[type=number].puzzle__cell {
   -moz-appearance: textfield;
+}
+
+.camera-capture {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background: rgba( 50, 205, 50, .5 );
+}
+
+.camera-capture__video {
+  position: absolute;
+  /* width: 100vw; */
+  /* height: 100vh; */
+  left: 0;
+  top: 0;
+}
+
+.camera-capture__overlay-canvas {
+  /* width: 100vw;
+  height: 100vh; */
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+
+.camera-capture__controls {
+  position: absolute;
+  bottom: 40px;
+  width: 100vw;
+  display: flex;
+  justify-content: space-around;
 }

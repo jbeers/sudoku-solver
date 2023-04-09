@@ -93,7 +93,14 @@ const CameraCapture = ( { onCancelClick }) => {
         }
 
         navigator.mediaDevices
-            .getUserMedia({ video: { width: window.outerWidth, height: window.outerHeight }, audio: false })
+            .getUserMedia({
+                video: {
+                    width: window.outerWidth,
+                    height: window.outerHeight,
+                    facingMode: { exact: "environment" }
+                },
+                audio: false
+            })
             .then((stream) => {
                 video.current.srcObject = stream;
                 video.current.play();

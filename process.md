@@ -77,3 +77,36 @@ Found this library - https://crates.io/crates/aws-sdk-rekognition/0.24.0
 It allows you to create a client and then process images as either base64 or in s3.
 I could possibly create a lambda or url that just gets the image as base64 and returns the result.
 That sounds way better than integrating with s3.
+
+3/28
+
+created a github action
+my rust build was failing so i had to split my rust project into two crates
+after that I created a docker image for a nginx container with a self-signed ssl cert
+i was able to run npm build in my ui project and then serve it using my nginx containre
+after that I could access the site on my phone using https://my-hostname and view the site on my phone - it worked!
+
+4/9
+
+Made huge progress! Thank you Jesus! Created the following user story and implemented the checks.
+
+when a user first vists the page    ✔
+    they should see an empty sudoku board with two buttons  ✔
+    the first button should be "From Photo" ✔
+    the second button should say "solve"    ✔
+When a user clicks "From Photo"     ❌
+    they should see a ui for selecting a photo  ✔
+    the photo ui should show a square region with a grid for locating the sudoku    ✔
+    the photo ui should have a button to cancel ✔
+    the photo ui should have a button to confirm    ✔
+    when the user clicks confirm it should send hte picture to the sudoku lambda        ❌
+when the sudoku lambda responds with success it should load the sudoku board    ❌
+when teh sudoku lambda responds with failur eit should display an error message ❌
+when the user clicks "Solve"    ✔
+    it should change the title to "Solution"    ✔
+    it should display the original numbers in a certain color   ❌
+    it should display the solution colors in another color  ❌
+    it should show a button to start over   ✔
+    if their is no valid solution it should display an error message    ❌
+
+The mobile version doesn't look at all like what the emulator shows. Will need to do some on-device debugging. 

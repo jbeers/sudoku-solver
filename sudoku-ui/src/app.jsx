@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'preact/hooks'
 import './app.css'
 import init, { solve_sudoku } from './pkg/sudoku_solver.js'
+import { CameraCapture } from './CameraCapture';
 
 const default_puzzle = [
     [ 4, 0, 0, 9, 0, 0, 0, 5, 0 ],
@@ -57,97 +58,14 @@ const SudokuPuzzle = ( { title, puzzle, onChange } ) => {
     </div>
 }
 
-const CameraCapture = ( { onCancelClick }) => {
-    const video = useRef();
-    const overlayCanvas = useRef();
-    const outputCanvas = useRef();
-
-    useEffect( () => {
-        const context = overlayCanvas.current.getContext("2d");
-        overlayCanvas.current.width = window.innerWidth;
-        overlayCanvas.current.height = window.innerHeight;
-        context.beginPath();
-        context.strokeStyle = '#000';
-        const rectSize = window.outerWidth - 40;
-        const rectX = 20,
-            rectY = window.outerHeight / 2 - rectSize / 2;
-        context.rect( rectX, rectY, rectSize, rectSize );
-        context.stroke();
-
-        context.fillStyle = '#000a';
-        context.fillRect( 0, 0, window.outerWidth, window.outerHeight / 2 - rectSize / 2 );
-        context.fillRect( 0, window.outerHeight / 2 - rectSize / 2, 20, rectSize );
-        context.fillRect( window.outerWidth - 20, window.outerHeight / 2 - rectSize / 2, 20, rectSize );
-        context.fillRect( 0, window.outerHeight / 2 + rectSize / 2, window.outerWidth, window.outerHeight / 2 - rectSize / 2 );
-
-        for( var i = 1; i < 3; i++ ){
-            context.beginPath();
-            context.moveTo( rectX + i * ( rectSize / 3 ), rectY );
-            context.lineTo( rectX + i * ( rectSize / 3 ), rectY + rectSize );
-            context.stroke();
-
-            context.beginPath();
-            context.moveTo( rectX, rectY + i * ( rectSize / 3 ) );
-            context.lineTo( rectX + rectSize, rectY + i * ( rectSize / 3 ) );
-            context.stroke();
-        }
-
-        navigator.mediaDevices
-            .getUserMedia({
-                video: {
-                    width: window.outerWidth,
-                    height: window.outerHeight,
-                    facingMode: { exact: "environment" }
-                },
-                audio: false
-            })
-            .then((stream) => {
-                video.current.srcObject = stream;
-                video.current.play();
-            })
-            .catch((err) => {
-                console.error(`An error occurred: ${err}`);
-            });
-    }, [] );
-
-    const handleTakePictureClick = () => {
-        const rectSize = window.outerWidth - 40;
-        const context = outputCanvas.current.getContext("2d");
-        outputCanvas.current.width = 512;
-        outputCanvas.current.height = 512;
-        context.fillStyle = 'red';
-        const sx = 20,
-            sy = window.outerHeight / 2 - rectSize / 2;
-        const sSize = window.outerWidth - 40;
-
-        context.drawImage( video.current, sx, sy, sSize, sSize, 0, 0, 512, 512 );
-        var image = new Image();
-        image.src = outputCanvas.current.toDataURL();
-
-        var w = window.open("");
-        w.document.write(image.outerHTML);
-    };
-
-    const handleCancelClick = () => {
-        onCancelClick();
-    };
-
-    return <div className="camera-capture">
-        <video className="camera-capture__video" ref={video} >Video stream not available.</video>
-        <canvas className="camera-capture__overlay-canvas" ref={overlayCanvas} />
-        <canvas className="camera-capture__output-canvas" ref={outputCanvas} style={{visibility: "hidden"}}/>
-        <div className="camera-capture__controls">
-            <button className="app-buttons__button" onClick={handleCancelClick}>Cancel</button>
-            <button className="app-buttons__button" onClick={handleTakePictureClick}>Take Picture</button>
-        </div>
-    </div>
-}
 
 export function App() {
     const [ solved, setSolved ] = useState( false );
     const [ inputPuzzle, setInputPuzzle ] = useState( default_puzzle );
     const [ solvedPuzzle, setSolvedPuzzle ] = useState( null );
     const [ takingPicture, setTakingPicture ] = useState( false );
+    const [ hasPhoto, setHasPhoto ] = useState( false );
+    const [ photo, setPhoto ] = useState( null );
 
     
     useEffect(() => {
@@ -196,9 +114,20 @@ export function App() {
         setTakingPicture( false );
     }
 
+    const handlePictureTaken = ( photo ) => {
+        setPhoto( photo );
+        setHasPhoto( true );
+        setTakingPicture( false );
+    }
+
     return (
         <div className='app'>
-            <SudokuPuzzle title={ solved ? "Your Solution" : "Your Puzzle" } puzzle={ solved ? solvedPuzzle : inputPuzzle } onChange = { handleInputChange } />
+            {
+                hasPhoto && <img src={photo.src} width={256} height={256} />
+            }
+            {
+                !hasPhoto && <SudokuPuzzle title={ solved ? "Your Solution" : "Your Puzzle" } puzzle={ solved ? solvedPuzzle : inputPuzzle } onChange = { handleInputChange } />
+            }
             <div className="app-buttons">
                 {
                     !solved && <>
@@ -212,7 +141,7 @@ export function App() {
                     </>
                 }
             </div>
-            { takingPicture && <CameraCapture onCancelClick={handleCameraCaptureCancel}/> }
+            { takingPicture && <CameraCapture onCancelClick={handleCameraCaptureCancel} onPictureTaken={handlePictureTaken}/> }
         </div>
     )
 }

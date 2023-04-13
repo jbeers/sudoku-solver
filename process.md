@@ -110,3 +110,13 @@ when the user clicks "Solve"    ✔
     if their is no valid solution it should display an error message    ❌
 
 The mobile version doesn't look at all like what the emulator shows. Will need to do some on-device debugging. 
+
+4/12
+
+Received my usb-c cord in the mail so I was able to connect my phone and start debugging.
+Fixed some styling issues - still need to go back to the desktop and fix its style.
+
+Struggled a lot with the camera until I came across this on stackoverflow
+https://stackoverflow.com/questions/61332186/when-mobile-is-rotated-width-and-height-are-swapped-in-get-user-media-api-javas
+
+Next I need to connect everything to AWS.

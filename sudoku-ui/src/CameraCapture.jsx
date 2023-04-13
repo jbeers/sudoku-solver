@@ -80,22 +80,12 @@ export const CameraCapture = ( { onCancelClick, onPictureTaken }) => {
         const sx = 20,
             sy = (window.innerHeight / 2) - (rectSize / 2),
             sSize = rectSize;
-        // const sx = ( 20 / window.innerWidth ) * video.current.videoWidth,
-        //     sy = ( ((window.innerHeight / 2) - (rectSize / 2) )/ window.innerHeight ) * video.current.videoHeight,
-        //     sSize = ( rectSize / window.innerWidth ) * video.current.videoWidth;
-        console.log( sy );
-        // debugger;
         context.fillRect( 0, 0, rectSize, rectSize );
         context.drawImage( video.current, sx, sy, sSize, sSize, 0, 0, rectSize, rectSize );
         var image = new Image();
         image.src = outputCanvas.current.toDataURL();
 
-        onPictureTaken( image );
-
-        // console.log( outputCanvas.current.toDataURL() );
-
-        // var w = window.open("");
-        // w.document.write(image.innerHTML);
+        outputCanvas.current.toBlob( blob => onPictureTaken( blob ) );
     };
 
     const handleCancelClick = () => {

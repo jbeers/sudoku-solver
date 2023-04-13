@@ -27,6 +27,18 @@ const empty_puzzle = [
     [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
 ];
 
+async function requestSolution( photoBlob ){
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", photoBlob.type );
+    const response = await fetch( 'https://q6nxqmkx5n6md6wjs2j3it6gde0tywiv.lambda-url.us-west-1.on.aws/', {
+        headers: myHeaders,
+        method: 'POST',
+        body: photoBlob
+    });
+
+    return response.json();
+}
+
 const SudokuPuzzle = ( { title, puzzle, onChange } ) => {
 
 
@@ -114,16 +126,24 @@ export function App() {
         setTakingPicture( false );
     }
 
-    const handlePictureTaken = ( photo ) => {
-        setPhoto( photo );
-        setHasPhoto( true );
-        setTakingPicture( false );
+    const handlePictureTaken = async ( photoBlob ) => {
+       
+        try{
+
+            const res = await requestSolution( photoBlob );
+            setInputPuzzle( res.board );
+            setTakingPicture( false );
+        }
+        catch( e ){
+            setInputPuzzle( empty_puzzle.map( r => r.map( i => i ) ) );
+            setTakingPicture( false );
+        }
     }
 
     return (
         <div className='app'>
             {
-                hasPhoto && <img src={photo.src} width={256} height={256} />
+                hasPhoto && <img src={photoBlob.toD.src} width={256} height={256} />
             }
             {
                 !hasPhoto && <SudokuPuzzle title={ solved ? "Your Solution" : "Your Puzzle" } puzzle={ solved ? solvedPuzzle : inputPuzzle } onChange = { handleInputChange } />

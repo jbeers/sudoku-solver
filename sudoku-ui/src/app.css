@@ -62,6 +62,11 @@
   border: 1px solid #ddd;
 }
 
+.puzzle__cell--parse-failure {
+  border: 1px solid red;
+  background: #ffaacc
+}
+
 .puzzle__cell:focus {
   border: 1px solid black;
 }

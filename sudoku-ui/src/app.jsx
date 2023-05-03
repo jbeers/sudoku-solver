@@ -28,6 +28,116 @@ const empty_puzzle = [
 ];
 
 async function requestSolution( photoBlob ){
+    return {
+        "board": [
+            [
+                3,
+                1,
+                5,
+                7,
+                6,
+                0,
+                2,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                0,
+                3,
+                2,
+                0,
+                0,
+                1,
+                0
+            ],
+            [
+                0,
+                6,
+                9,
+                5,
+                8,
+                0,
+                4,
+                3,
+                7
+            ],
+            [
+                0,
+                8,
+                0,
+                0,
+                0,
+                3,
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                0,
+                6,
+                0,
+                0,
+                9,
+                0,
+                8
+            ],
+            [
+                9,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                6,
+                4
+            ],
+            [
+                8,
+                0,
+                3,
+                0,
+                0,
+                6,
+                7,
+                0,
+                0
+            ],
+            [
+                0,
+                9,
+                2,
+                1,
+                0,
+                7,
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                0,
+                9,
+                0,
+                0,
+                0,
+                4,
+                0
+            ]
+        ],
+        "message": "parse failure",
+        "parse_failures": [
+            [
+                8,
+                0
+            ]
+        ]
+    };
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", photoBlob.type );
     const response = await fetch( 'https://q6nxqmkx5n6md6wjs2j3it6gde0tywiv.lambda-url.us-west-1.on.aws/', {
@@ -39,7 +149,9 @@ async function requestSolution( photoBlob ){
     return response.json();
 }
 
-const SudokuPuzzle = ( { title, puzzle, onChange } ) => {
+const SudokuPuzzle = ( { title, puzzle, onChange, parseFailures = [] } ) => {
+
+    const isParseFailure = ( x, y ) => parseFailures.find( f => f[0] === x && f[1] === y );
 
 
     return <div className='puzzle'>
@@ -53,7 +165,7 @@ const SudokuPuzzle = ( { title, puzzle, onChange } ) => {
                                 <input
                                     key={x}
                                     type='number'
-                                    className='puzzle__cell'
+                                    className={`puzzle__cell ${isParseFailure( x, y ) ? 'puzzle__cell--parse-failure' : ''}`}
                                     value={ num ? num : null }
                                     onChange = {
                                         ( e ) => {
@@ -74,10 +186,12 @@ const SudokuPuzzle = ( { title, puzzle, onChange } ) => {
 export function App() {
     const [ solved, setSolved ] = useState( false );
     const [ inputPuzzle, setInputPuzzle ] = useState( default_puzzle );
+    const [ parseFailures, setParseFailures ] = useState( [] );
     const [ solvedPuzzle, setSolvedPuzzle ] = useState( null );
     const [ takingPicture, setTakingPicture ] = useState( false );
     const [ hasPhoto, setHasPhoto ] = useState( false );
     const [ photo, setPhoto ] = useState( null );
+    const [ errorMessage, setErrorMessage ] = useState( null );
 
     
     useEffect(() => {
@@ -86,18 +200,31 @@ export function App() {
        })();
     }, [] )
 
+    useEffect(() => {
+        if( parseFailures.length ){
+            setErrorMessage( 'Some numbers were unable to be parsed. Please check your inputs.' );
+        }
+        
+    }, [parseFailures] );
+
     const handleSolveClick = () => {
         const linear_puzzle = inputPuzzle.reduce( ( acc, row ) => acc.concat( row ), [] );
-        const linear_solution = solve_sudoku( linear_puzzle );
-        const solution = [];
-
-        for( let i = 0; i < 9; i++ ){
-            solution.push( Array.from(linear_solution.slice( i * 9, i * 9 + 9 ) ) );
+        try{
+            const linear_solution = solve_sudoku( linear_puzzle );
+            const solution = [];
+            
+            for( let i = 0; i < 9; i++ ){
+                solution.push( Array.from(linear_solution.slice( i * 9, i * 9 + 9 ) ) );
+            }
+            
+            setSolvedPuzzle( solution );
+            setParseFailures( [] );
+            setSolved( true );
         }
-
-        setSolvedPuzzle( solution );
-        setSolved( true );
-        
+        catch( e ){
+            setParseFailures( [] );
+            setErrorMessage( "Sorry! I don''t think your puzzle has a solution! Please check your inputs." );
+        }
     }
 
     const handleClearClick = () => {
@@ -116,6 +243,7 @@ export function App() {
         }
 
         setInputPuzzle( newPuzzle );
+        setParseFailures( parseFailures.filter( f => !( f[0] === x && f[1] === y ) ) );
     };
 
     const handleFromPhotoClick = () => {
@@ -129,9 +257,9 @@ export function App() {
     const handlePictureTaken = async ( photoBlob ) => {
        
         try{
-
             const res = await requestSolution( photoBlob );
             setInputPuzzle( res.board );
+            setParseFailures( res.parse_failures );
             setTakingPicture( false );
         }
         catch( e ){
@@ -146,7 +274,13 @@ export function App() {
                 hasPhoto && <img src={photoBlob.toD.src} width={256} height={256} />
             }
             {
-                !hasPhoto && <SudokuPuzzle title={ solved ? "Your Solution" : "Your Puzzle" } puzzle={ solved ? solvedPuzzle : inputPuzzle } onChange = { handleInputChange } />
+                !hasPhoto
+                && <SudokuPuzzle
+                    title={ solved ? "Your Solution" : "Your Puzzle" }
+                    puzzle={ solved ? solvedPuzzle : inputPuzzle }
+                    onChange = { handleInputChange }
+                    parseFailures = { parseFailures }
+                />
             }
             <div className="app-buttons">
                 {
@@ -161,6 +295,11 @@ export function App() {
                     </>
                 }
             </div>
+            {
+                !errorMessage
+                    ? null
+                    : <p>{errorMessage}</p>
+            }
             { takingPicture && <CameraCapture onCancelClick={handleCameraCaptureCancel} onPictureTaken={handlePictureTaken}/> }
         </div>
     )

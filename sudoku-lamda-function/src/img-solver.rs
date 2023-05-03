@@ -61,9 +61,7 @@ async fn hello(
         .map( |td| DetectedWord::from( td ) )
         .collect();
 
-    Ok(json!({"board": words_to_sudoku( &words, pic.width() as usize, pic.height() as usize )}))
-
-    // Ok(json!({"words": "test"}))
+    Ok(json!(words_to_sudoku( &words, pic.width() as usize, pic.height() as usize )))
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -104,16 +102,49 @@ async fn get_config() -> SdkConfig {
     aws_config::from_env().region(region_provider).load().await
 }
 
-fn words_to_sudoku( words: &Vec<DetectedWord>, width: usize, height: usize ) -> Vec<Vec<usize>> {
+#[derive(Serialize)]
+struct SudokuBoard {
+    board: Vec<Vec<usize>>,
+    message: String,
+    parse_failures: Vec<(usize, usize)>,
+}
+
+fn words_to_sudoku( words: &Vec<DetectedWord>, width: usize, height: usize ) -> SudokuBoard {
     let mut board: Vec::<Vec<usize>> = ( 0..9 ).into_iter()
                                             .map(|_| {
                                                 ( 0..9 ).into_iter().map(|_| 0).collect()
                                             }).collect();
+    let mut parse_failures: Vec<(usize, usize)> = vec![];
 
     for word in words {
         let ( x, y ) = word.get_x_y( &width, &height );
-        board[ y ][ x ] = word.text.parse::<usize>().unwrap_or( 0 );
+        board[ y ][ x ] = match word.text.parse::<usize>() {
+            Err(e) => {
+                parse_failures.push( ( x, y ) );
+                0
+            },
+            Ok(n) => {
+                if n > 9 {
+                    parse_failures.push( ( x, y ) );
+                    0
+                }
+                else {
+                    n
+                }
+            }
+        };
     }
 
-    board
+    let message = if parse_failures.len() > 0 {
+        "parse failure".to_owned()
+    }
+    else {
+        "parse successful".to_owned()
+    };
+
+    SudokuBoard {
+        board,
+        parse_failures,
+        message: message
+    }
 }

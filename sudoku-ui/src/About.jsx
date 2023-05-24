@@ -3,10 +3,10 @@ import './About.css';
 
 export const About = ( { onComplete }) => {
     return  <div className="about">
-        <div className="top-buttons">
-            <h1 className="top-buttons__title">Sudoku Solver</h1>
-            <a className="top-buttons__about" >About</a>
-            <a href="https://github.com/jbeers/sudoku-solver"><img className="top-buttons__github" src={githubLogo}/></a>
+        <div className="top-navigation">
+            <h1 className="top-navigation__title">Sudoku Solver</h1>
+            <a className="top-navigation__about" >About</a>
+            <a href="https://github.com/jbeers/sudoku-solver"><img className="top-navigation__github" src={githubLogo}/></a>
         </div>
         <div className="about-content">
             <p>

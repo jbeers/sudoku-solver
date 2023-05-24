@@ -226,7 +226,7 @@ export function App() {
         }
         catch( e ){
             setParseFailures( [] );
-            setErrorMessage( "Sorry! I don''t think your puzzle has a solution! Please check your inputs." );
+            setErrorMessage( "Sorry! I don't think your puzzle has a solution! Please check your inputs." );
         }
     }
 
@@ -283,10 +283,10 @@ export function App() {
 
     return (
         <div className='app'>
-            <div className="top-buttons">
-                <h1 className="top-buttons__title">Sudoku Solver<span className="top-buttons__beta-tag">BETA</span></h1>
-                <a className="top-buttons__about" onClick={handleAboutClick}>About</a>
-                <a href="https://github.com/jbeers/sudoku-solver"><img className="top-buttons__github" src={githubLogo}/></a>
+            <div className="top-navigation">
+                <h1 className="top-navigation__title">Sudoku Solver<span className="top-navigation__beta-tag">BETA</span></h1>
+                <a className="top-navigation__about" onClick={handleAboutClick}>About</a>
+                <a href="https://github.com/jbeers/sudoku-solver"><img className="top-navigation__github" src={githubLogo}/></a>
             </div>
             {
                 hasPhoto && <img src={photoBlob.toD.src} width={256} height={256} />

@@ -14,7 +14,7 @@
   flex-direction: column;
 }
 
-.top-buttons {
+.top-navigation {
   display: flex;
   justify-content: end;
   width: 100%;
@@ -22,7 +22,7 @@
   padding: 10px;
 }
 
-.top-buttons__title {
+.top-navigation__title {
   margin: 0px;
   padding: 0px;
   margin-right: auto;
@@ -30,7 +30,7 @@
   position: relative;
 }
 
-.top-buttons__beta-tag {
+.top-navigation__beta-tag {
     position: absolute;
     bottom: -2px;
     font-size: .7rem;
@@ -42,15 +42,15 @@
     color: black;
 }
 
-.top-buttons > *:not( :last-of-type ) {
+.top-navigation > *:not( :last-of-type ) {
   margin-right: 30px;
 }
 
-.top-buttons__about {
+.top-navigation__about {
 
 }
 
-.top-buttons__github {
+.top-navigation__github {
   height: 30px;
   width: 30px;
 }

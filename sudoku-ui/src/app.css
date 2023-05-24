@@ -132,7 +132,7 @@ input[type=number].puzzle__cell {
   bottom: 0;
   right: 0;
   left: 0;
-  background: rgba( 50, 205, 50, .5 );
+  background: #333;
   overflow:hidden;
 }
 
@@ -156,4 +156,9 @@ input[type=number].puzzle__cell {
   width: 100vw;
   display: flex;
   justify-content: space-around;
+}
+
+.camera-capture__error-message {
+  margin: 20px;
+  text-align: center;
 }

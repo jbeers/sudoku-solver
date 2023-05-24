@@ -191,8 +191,6 @@ export function App() {
     const [ parseFailures, setParseFailures ] = useState( [] );
     const [ solvedPuzzle, setSolvedPuzzle ] = useState( null );
     const [ takingPicture, setTakingPicture ] = useState( false );
-    const [ hasPhoto, setHasPhoto ] = useState( false );
-    const [ photo, setPhoto ] = useState( null );
     const [ errorMessage, setErrorMessage ] = useState( null );
     const [ showAbout, setShowAbout ] = useState( false );
 
@@ -288,38 +286,54 @@ export function App() {
                 <a className="top-navigation__about" onClick={handleAboutClick}>About</a>
                 <a href="https://github.com/jbeers/sudoku-solver"><img className="top-navigation__github" src={githubLogo}/></a>
             </div>
-            {
-                hasPhoto && <img src={photoBlob.toD.src} width={256} height={256} />
-            }
-            {
-                !hasPhoto
-                && <SudokuPuzzle
-                    title={ solved ? "Your Solution" : "Your Puzzle" }
-                    puzzle={ solved ? solvedPuzzle : inputPuzzle }
-                    onChange = { handleInputChange }
-                    parseFailures = { parseFailures }
-                />
-            }
-            <div className="app-buttons">
-                {
-                    !solved && <>
-                        <button className="app-buttons__button" onClick={handleFromPhotoClick}>From Photo</button>
-                        <button className="app-buttons__button" onClick={handleSolveClick}>Solve!</button>
-                    </>
-                }
-                {
-                    solved && <>
-                        <button className="app-buttons__button" onClick={handleClearClick}>Clear</button>
-                    </>
-                }
-            </div>
-            {
-                !errorMessage
-                    ? null
-                    : <p>{errorMessage}</p>
-            }
+            <SudokuPanel
+                solved={ solved }
+                solvedPuzzle={solvedPuzzle}
+                inputPuzzle={inputPuzzle}
+                handleInputChange={handleInputChange}
+                parseFailures={parseFailures}
+                handleFromPhotoClick = { handleFromPhotoClick }
+                handleSolveClick = { handleSolveClick }
+                handleClearClick = { handleClearClick }
+                errorMessage = { errorMessage }
+            />
             { takingPicture && <CameraCapture onCancelClick={handleCameraCaptureCancel} onPictureTaken={handlePictureTaken}/> }
             { showAbout && <About onComplete={handleAboutDone}/>}
         </div>
     )
+}
+
+const SudokuPanel = ( {
+    solved,
+    solvedPuzzle,
+    inputPuzzle,
+    handleInputChange,
+    parseFailures,
+    handleFromPhotoClick,
+    handleSolveClick,
+    handleClearClick,
+    errorMessage
+} ) => {
+    return <div>
+        <SudokuPuzzle
+            title={ solved ? "Your Solution" : "Your Puzzle" }
+            puzzle={ solved ? solvedPuzzle : inputPuzzle }
+            onChange = { handleInputChange }
+            parseFailures = { parseFailures }
+        />
+        <div className="app-buttons">
+            {
+                !solved && <>
+                    <button className="app-buttons__button" onClick={handleFromPhotoClick}>From Photo</button>
+                    <button className="app-buttons__button" onClick={handleSolveClick}>Solve!</button>
+                </>
+            }
+            {
+                solved && <>
+                    <button className="app-buttons__button" onClick={handleClearClick}>Clear</button>
+                </>
+            }
+        </div>
+        { !errorMessage ? null : <p>{errorMessage}</p> }
+    </div>
 }

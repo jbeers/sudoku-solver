@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'preact/hooks'
 import './app.css'
 import init, { solve_sudoku } from './pkg/sudoku_solver.js'
 import { CameraCapture } from './CameraCapture';
+import githubLogo from './assets/github-mark-white.svg';
+import { About } from './About';
 
 const default_puzzle = [
     [ 4, 0, 0, 9, 0, 0, 0, 5, 0 ],
@@ -192,6 +194,7 @@ export function App() {
     const [ hasPhoto, setHasPhoto ] = useState( false );
     const [ photo, setPhoto ] = useState( null );
     const [ errorMessage, setErrorMessage ] = useState( null );
+    const [ showAbout, setShowAbout ] = useState( false );
 
     
     useEffect(() => {
@@ -268,8 +271,23 @@ export function App() {
         }
     }
 
+    const handleAboutClick = (e) => {
+        e.preventDefault();
+
+        setShowAbout( true );
+    }
+
+    const handleAboutDone = () =>{
+        setShowAbout( false );
+    }
+
     return (
         <div className='app'>
+            <div className="top-buttons">
+                <h1 className="top-buttons__title">Sudoku Solver<span className="top-buttons__beta-tag">BETA</span></h1>
+                <a className="top-buttons__about" onClick={handleAboutClick}>About</a>
+                <a href="https://github.com/jbeers/sudoku-solver"><img className="top-buttons__github" src={githubLogo}/></a>
+            </div>
             {
                 hasPhoto && <img src={photoBlob.toD.src} width={256} height={256} />
             }
@@ -301,6 +319,7 @@ export function App() {
                     : <p>{errorMessage}</p>
             }
             { takingPicture && <CameraCapture onCancelClick={handleCameraCaptureCancel} onPictureTaken={handlePictureTaken}/> }
+            { showAbout && <About onComplete={handleAboutDone}/>}
         </div>
     )
 }

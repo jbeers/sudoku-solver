@@ -1,18 +1,58 @@
 #app {
   max-width: 1280px;
+  height: 100vh;
   margin: 0 auto;
-  text-align: center;
+  /* text-align: center; */
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
 }
 
 .app {
-  justify-content: center;
   align-items: center;
   display: flex;
+  height: 100vh;
   flex-direction: column;
+}
+
+.top-buttons {
+  display: flex;
+  justify-content: end;
+  width: 100%;
+  align-items: center;
+  padding: 10px;
+}
+
+.top-buttons__title {
+  margin: 0px;
+  padding: 0px;
+  margin-right: auto;
+  font-size: 1.8rem;
+  position: relative;
+}
+
+.top-buttons__beta-tag {
+    position: absolute;
+    bottom: -2px;
+    font-size: .7rem;
+    background: #999;
+    padding: 4px;
+    border-radius: 5px;
+    transform: rotate(-25deg);
+    letter-spacing: 2px;
+    color: black;
+}
+
+.top-buttons > *:not( :last-of-type ) {
+  margin-right: 30px;
+}
+
+.top-buttons__about {
+
+}
+
+.top-buttons__github {
+  height: 30px;
+  width: 30px;
 }
 
 .app-buttons {
@@ -32,6 +72,7 @@
   flex-direction: column;
   width: fit-content;
   align-items: center;
+  justify-self: center;
 }
 
 .puzzle > * {

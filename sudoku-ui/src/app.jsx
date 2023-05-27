@@ -7,18 +7,7 @@ import { About } from './About';
 import { default_puzzle, empty_puzzle, SudokuPanel } from './panels';
 import { useReducer } from 'preact/hooks';
 import { SudokuContext } from './SudokuContext';
-
-async function requestSolution( photoBlob ){
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", photoBlob.type );
-    const response = await fetch( 'https://q6nxqmkx5n6md6wjs2j3it6gde0tywiv.lambda-url.us-west-1.on.aws/', {
-        headers: myHeaders,
-        method: 'POST',
-        body: photoBlob
-    });
-
-    return response.json();
-}
+import { Outlet, RouterProvider, createHashRouter, useNavigate } from 'react-router-dom';
 
 const initial_state = {
     solved: false,
@@ -88,11 +77,50 @@ function reducer( state, action ){
     return { ...state };
 }
 
-export function App() {
-    const [ takingPicture, setTakingPicture ] = useState( false );
-    const [ showAbout, setShowAbout ] = useState( false );
-    const [ state, dispatch ] = useReducer( reducer, initial_state );
+const Root = () => {
+    const navigate = useNavigate();
 
+    const handleAboutClick = (e) => {
+        e.preventDefault();
+
+        navigate( '/about' );
+    }
+
+    return <div className='app'>
+        <div className="top-navigation">
+            <h1 className="top-navigation__title">Sudoku Solver<span className="top-navigation__beta-tag">BETA</span></h1>
+            <a className="top-navigation__about" onClick={handleAboutClick}>About</a>
+            <a href="https://github.com/jbeers/sudoku-solver"><img className="top-navigation__github" src={githubLogo}/></a>
+        </div>
+        <Outlet />
+    </div>
+}
+
+const routes = createHashRouter([
+    {
+        path: '/',
+        element: <Root />,
+        children: [
+            {
+                path: '',
+                element: <SudokuPanel />
+            },
+            {
+                path: '/about',
+                element: <About />
+            },
+            {
+                path: '/capture',
+                element: <CameraCapture />
+            }
+        ]
+    }
+]);
+
+
+
+export function App() {
+    const [ state, dispatch ] = useReducer( reducer, initial_state );
     
     useEffect(() => {
        ( async () => {
@@ -100,59 +128,7 @@ export function App() {
        })();
     }, [] )
 
-    useEffect(() => {
-        if( state.parseFailures.length ){
-            dispatch({type: 'ERROR', errorMessage: 'Some numbers were unable to be parsed. Please check your inputs.'});
-        }
-        
-    }, [state.parseFailures] );
-
-
-    const handleFromPhotoClick = () => {
-        setTakingPicture( true );
-    };
-
-    const handleCameraCaptureCancel = () => {
-        setTakingPicture( false );
-    }
-
-    const handlePictureTaken = async ( photoBlob ) => {
-       
-        try{
-            const response = await requestSolution( photoBlob );
-            dispatch({ type: 'HANDLE_API_RESPONSE', response } )
-            setTakingPicture( false );
-        }
-        catch( e ){
-            dispatch({ type: 'HANDLE_API_ERROR' } )
-            setTakingPicture( false );
-        }
-    }
-
-    const handleAboutClick = (e) => {
-        e.preventDefault();
-
-        setShowAbout( true );
-    }
-
-    const handleAboutDone = () =>{
-        setShowAbout( false );
-    }
-
-    return (
-        <div className='app'>
-            <SudokuContext.Provider value={[state, dispatch]}>
-                <div className="top-navigation">
-                    <h1 className="top-navigation__title">Sudoku Solver<span className="top-navigation__beta-tag">BETA</span></h1>
-                    <a className="top-navigation__about" onClick={handleAboutClick}>About</a>
-                    <a href="https://github.com/jbeers/sudoku-solver"><img className="top-navigation__github" src={githubLogo}/></a>
-                </div>
-                <SudokuPanel
-                    handleFromPhotoClick = { handleFromPhotoClick }
-                />
-                { takingPicture && <CameraCapture onCancelClick={handleCameraCaptureCancel} onPictureTaken={handlePictureTaken}/> }
-                { showAbout && <About onComplete={handleAboutDone}/>}
-            </SudokuContext.Provider>
-        </div>
-    )
+    return <SudokuContext.Provider value={[state, dispatch]}>
+        <RouterProvider router={routes} />
+    </SudokuContext.Provider>
 }

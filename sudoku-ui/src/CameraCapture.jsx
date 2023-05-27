@@ -1,4 +1,18 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
+import { useNavigate } from 'react-router-dom';
+import { useSudokuContext } from './SudokuContext';
+
+async function requestSolution( photoBlob ){
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", photoBlob.type );
+    const response = await fetch( 'https://q6nxqmkx5n6md6wjs2j3it6gde0tywiv.lambda-url.us-west-1.on.aws/', {
+        headers: myHeaders,
+        method: 'POST',
+        body: photoBlob
+    });
+
+    return response.json();
+}
 
 function drawOverlay( context ){
     context.beginPath();
@@ -44,11 +58,13 @@ async function startVideoCapture( video ){
 }
 
 
-export const CameraCapture = ( { onCancelClick, onPictureTaken }) => {
+export const CameraCapture = () => {
     const video = useRef();
     const overlayCanvas = useRef();
     const outputCanvas = useRef();
     const [ errorMessage, setErrorMessage ] = useState();
+    const navigate = useNavigate();
+    const [ state, dispatch ] = useSudokuContext();
 
     useEffect( () => {
         (async () => {
@@ -86,11 +102,21 @@ export const CameraCapture = ( { onCancelClick, onPictureTaken }) => {
         var image = new Image();
         image.src = outputCanvas.current.toDataURL();
 
-        outputCanvas.current.toBlob( blob => onPictureTaken( blob ) );
+        outputCanvas.current.toBlob( async blob => {
+            try{
+                const response = await requestSolution( photoBlob );
+                dispatch({ type: 'HANDLE_API_RESPONSE', response } )
+                navigate( '/' );
+            }
+            catch( e ){
+                dispatch({ type: 'HANDLE_API_ERROR' } )
+                navigate( '/' );
+            }
+        });
     };
 
     const handleCancelClick = () => {
-        onCancelClick();
+        navigate( '/' );
     };
 
     return <div className="camera-capture">

@@ -1,7 +1,14 @@
 import githubLogo from './assets/github-mark-white.svg';
 import './About.css';
+import { useNavigate } from 'react-router-dom';
 
-export const About = ( { onComplete }) => {
+export const About = () => {
+    const navigate = useNavigate();
+
+    const handleGoBackClick = () => {
+        navigate( '/' );
+    }
+
     return  <div className="about">
         <div className="top-navigation">
             <h1 className="top-navigation__title">Sudoku Solver</h1>
@@ -19,7 +26,7 @@ export const About = ( { onComplete }) => {
                 Take a look at the readme in my github project for more information.
             </p>
             <a className='about__github' href="https://github.com/jbeers/sudoku-solver"><img src={githubLogo}/></a>
-            <button className="about__goback" onClick={onComplete}>Go Back!</button>
+            <button className="about__goback" onClick={handleGoBackClick}>Go Back!</button>
         </div>
     </div>
 }

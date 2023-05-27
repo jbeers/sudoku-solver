@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { useSudokuContext } from "../SudokuContext";
 import { solve_sudoku } from '../pkg/sudoku_solver.js'
 
@@ -58,10 +59,13 @@ const SudokuPuzzle = ( { title, puzzle, onChange, parseFailures = [] } ) => {
     </div>
 }
 
-export const SudokuPanel = ( {
-    handleFromPhotoClick
-} ) => {
+export const SudokuPanel = () => {
     const[ state, dispatch ] = useSudokuContext();
+    const navigate = useNavigate();
+
+    const handleFromPhotoClick = () => {
+        navigate( '/capture' );
+    }
 
     const handleInputChange = ( value, x, y ) => {
         if( state.solved ){

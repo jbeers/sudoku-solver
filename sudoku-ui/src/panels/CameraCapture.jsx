@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { useNavigate } from 'react-router-dom';
-import { useSudokuContext } from './SudokuContext';
+import { useSudokuContext } from '../SudokuContext';
 
 async function requestSolution( photoBlob ){
     var myHeaders = new Headers();
@@ -58,7 +58,7 @@ async function startVideoCapture( video ){
 }
 
 
-export const CameraCapture = () => {
+export const CameraCapturePanel = () => {
     const video = useRef();
     const overlayCanvas = useRef();
     const outputCanvas = useRef();

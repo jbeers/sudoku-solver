@@ -1,13 +1,11 @@
-import { useEffect, useState } from 'preact/hooks'
-import './app.css'
-import init from './pkg/sudoku_solver.js'
-import { CameraCapture } from './CameraCapture';
-import githubLogo from './assets/github-mark-white.svg';
-import { About } from './About';
-import { default_puzzle, empty_puzzle, SudokuPanel } from './panels';
-import { useReducer } from 'preact/hooks';
-import { SudokuContext } from './SudokuContext';
+import { render } from 'preact'
+import { useEffect, useReducer } from 'preact/hooks'
 import { Outlet, RouterProvider, createHashRouter, useNavigate } from 'react-router-dom';
+import init from './pkg/sudoku_solver.js'
+import githubLogo from './assets/github-mark-white.svg';
+import { default_puzzle, empty_puzzle, SudokuPanel, AboutPanel, CameraCapturePanel } from './panels';
+import { SudokuContext } from './SudokuContext';
+import './app.css'
 
 const initial_state = {
     solved: false,
@@ -107,11 +105,11 @@ const routes = createHashRouter([
             },
             {
                 path: '/about',
-                element: <About />
+                element: <AboutPanel />
             },
             {
                 path: '/capture',
-                element: <CameraCapture />
+                element: <CameraCapturePanel />
             }
         ]
     }
@@ -119,7 +117,7 @@ const routes = createHashRouter([
 
 
 
-export function App() {
+const App = () => {
     const [ state, dispatch ] = useReducer( reducer, initial_state );
     
     useEffect(() => {
@@ -132,3 +130,5 @@ export function App() {
         <RouterProvider router={routes} />
     </SudokuContext.Provider>
 }
+
+render(<App />, document.getElementById('app'))

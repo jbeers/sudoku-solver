@@ -1,8 +1,8 @@
-import githubLogo from './assets/github-mark-white.svg';
+import githubLogo from '../assets/github-mark-white.svg';
 import './About.css';
 import { useNavigate } from 'react-router-dom';
 
-export const About = () => {
+export const AboutPanel = () => {
     const navigate = useNavigate();
 
     const handleGoBackClick = () => {

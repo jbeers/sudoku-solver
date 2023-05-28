@@ -96,7 +96,7 @@ export const SudokuPanel = () => {
         }
     }
 
-    return <div>
+    return <div className="sudoku">
         <SudokuPuzzle
             title={ state.solved ? "Your Solution" : "Your Puzzle" }
             puzzle={ state.solved ? state.solvedPuzzle : state.inputPuzzle }
@@ -116,6 +116,6 @@ export const SudokuPanel = () => {
                 </>
             }
         </div>
-        { !state.errorMessage ? null : <p>{state.errorMessage}</p> }
+        { !state.errorMessage ? null : <p className="sudoku__error-message">{state.errorMessage}</p> }
     </div>
 }

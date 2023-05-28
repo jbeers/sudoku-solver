@@ -104,7 +104,7 @@ export const CameraCapturePanel = () => {
 
         outputCanvas.current.toBlob( async blob => {
             try{
-                const response = await requestSolution( photoBlob );
+                const response = await requestSolution( blob );
                 dispatch({ type: 'HANDLE_API_RESPONSE', response } )
                 navigate( '/' );
             }

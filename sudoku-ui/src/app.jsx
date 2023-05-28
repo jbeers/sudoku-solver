@@ -78,6 +78,12 @@ function reducer( state, action ){
 const Root = () => {
     const navigate = useNavigate();
 
+    const handleTitleClick = (e) => {
+        e.preventDefault();
+
+        navigate( '/' );
+    }
+
     const handleAboutClick = (e) => {
         e.preventDefault();
 
@@ -86,11 +92,13 @@ const Root = () => {
 
     return <div className='app'>
         <div className="top-navigation">
-            <h1 className="top-navigation__title">Sudoku Solver<span className="top-navigation__beta-tag">BETA</span></h1>
+            <h1 className="top-navigation__title"><a onClick={handleTitleClick}>Sudoku Solver<span className="top-navigation__beta-tag">BETA</span></a></h1>
             <a className="top-navigation__about" onClick={handleAboutClick}>About</a>
             <a href="https://github.com/jbeers/sudoku-solver"><img className="top-navigation__github" src={githubLogo}/></a>
         </div>
-        <Outlet />
+        <div className="app-content">
+            <Outlet />
+        </div>
     </div>
 }
 
